@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace ACFAModelReplacer
+namespace SFExtractor
 {
     public class OverrideMenuStripSelectedColorTable : ProfessionalColorTable
     {

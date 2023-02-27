@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace ACFAModelReplacer
+namespace SFExtractor
 {
     internal static class Program
     {
