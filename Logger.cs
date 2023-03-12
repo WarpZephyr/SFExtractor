@@ -5,13 +5,16 @@ namespace SFExtractor
 {
     internal static class Logger
     {
+        public static string log = $"{Util.envFolderPath}/sfextractor.log";
+        public static string stacktraceLog = $"{Util.envFolderPath}/stacktrace.log";
+
         /// <summary>
         /// Create log files and overwrite them if they already exist.
         /// </summary>
         public static void CreateLog()
         {
-            File.WriteAllText(Util.log, String.Empty);
-            File.WriteAllText(Util.stacktraceLog, String.Empty);
+            File.WriteAllText(log, String.Empty);
+            File.WriteAllText(stacktraceLog, String.Empty);
         }
 
         /// <summary>
@@ -21,11 +24,11 @@ namespace SFExtractor
         /// <param name="description">The description of what to log</param>
         public static void LogExceptionWithDate(Exception ex, string description = null)
         {
-            using StreamWriter swLog = File.AppendText(Util.log);
+            using StreamWriter swLog = File.AppendText(log);
             swLog.WriteLine($"{description} on {DateTime.Now}");
             swLog.Close();
 
-            using StreamWriter swStacktrace = File.AppendText(Util.stacktraceLog);
+            using StreamWriter swStacktrace = File.AppendText(stacktraceLog);
             swStacktrace.WriteLine($"Description: \"{description ?? "Unknown Error"}\" on {DateTime.Now}\nException: {ex.Message}\nStacktrace: {ex}");
             swStacktrace.Close();
         }
@@ -36,7 +39,7 @@ namespace SFExtractor
         /// <param name="description">The description of what to log</param>
         public static void LogWithDate(string description = null)
         {
-            using StreamWriter sw = File.AppendText(Util.log);
+            using StreamWriter sw = File.AppendText(log);
             sw.WriteLine($"{description ?? "Log with date was called"} on {DateTime.Now}");
             sw.Close();
         }
@@ -47,7 +50,7 @@ namespace SFExtractor
         /// <param name="description">The description of what to log</param>
         public static void Log(string description = null)
         {
-            using StreamWriter sw = File.AppendText(Util.log);
+            using StreamWriter sw = File.AppendText(log);
             sw.WriteLine($"{description ?? "Log was called"}");
             sw.Close();
         }

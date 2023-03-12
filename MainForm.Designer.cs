@@ -30,11 +30,15 @@
         {
             this.MainFormMenuStrip = new System.Windows.Forms.MenuStrip();
             this.FileMS = new System.Windows.Forms.ToolStripMenuItem();
-            this.ExtractFileMS = new System.Windows.Forms.ToolStripMenuItem();
+            this.ExtractFileFMS = new System.Windows.Forms.ToolStripMenuItem();
+            this.DetectTypeFMS = new System.Windows.Forms.ToolStripMenuItem();
+            this.OptionsMS = new System.Windows.Forms.ToolStripMenuItem();
+            this.DetectionModeOMS = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpMS = new System.Windows.Forms.ToolStripMenuItem();
             this.AboutHMS = new System.Windows.Forms.ToolStripMenuItem();
             this.MainFormStatusStrip = new System.Windows.Forms.StatusStrip();
             this.MainFormStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.MSBTestFMS = new System.Windows.Forms.ToolStripMenuItem();
             this.MainFormMenuStrip.SuspendLayout();
             this.MainFormStatusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -44,6 +48,7 @@
             this.MainFormMenuStrip.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
             this.MainFormMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FileMS,
+            this.OptionsMS,
             this.HelpMS});
             this.MainFormMenuStrip.Location = new System.Drawing.Point(0, 0);
             this.MainFormMenuStrip.Name = "MainFormMenuStrip";
@@ -58,23 +63,61 @@
             this.FileMS.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.FileMS.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.FileMS.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ExtractFileMS});
+            this.ExtractFileFMS,
+            this.DetectTypeFMS,
+            this.MSBTestFMS});
             this.FileMS.ForeColor = System.Drawing.SystemColors.Control;
             this.FileMS.Name = "FileMS";
             this.FileMS.Size = new System.Drawing.Size(37, 20);
             this.FileMS.Text = "File";
             // 
-            // ExtractFileMS
+            // ExtractFileFMS
             // 
-            this.ExtractFileMS.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(75)))), ((int)(((byte)(75)))));
-            this.ExtractFileMS.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ExtractFileMS.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.ExtractFileMS.ForeColor = System.Drawing.SystemColors.Control;
-            this.ExtractFileMS.Name = "ExtractFileMS";
-            this.ExtractFileMS.Size = new System.Drawing.Size(110, 22);
-            this.ExtractFileMS.Text = "Extract";
-            this.ExtractFileMS.ToolTipText = "Decompresses multiple FromSoft compressed file types";
-            this.ExtractFileMS.Click += new System.EventHandler(this.ExtractFileMS_Click);
+            this.ExtractFileFMS.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(75)))), ((int)(((byte)(75)))));
+            this.ExtractFileFMS.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ExtractFileFMS.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.ExtractFileFMS.ForeColor = System.Drawing.SystemColors.Control;
+            this.ExtractFileFMS.Name = "ExtractFileFMS";
+            this.ExtractFileFMS.Size = new System.Drawing.Size(180, 22);
+            this.ExtractFileFMS.Text = "Extract";
+            this.ExtractFileFMS.ToolTipText = "Extracts multiple FromSoft container files and decompresses FromSoft DCX files";
+            this.ExtractFileFMS.Click += new System.EventHandler(this.ExtractFileMS_Click);
+            // 
+            // DetectTypeFMS
+            // 
+            this.DetectTypeFMS.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(75)))), ((int)(((byte)(75)))));
+            this.DetectTypeFMS.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.DetectTypeFMS.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.DetectTypeFMS.ForeColor = System.Drawing.SystemColors.Control;
+            this.DetectTypeFMS.Name = "DetectTypeFMS";
+            this.DetectTypeFMS.Size = new System.Drawing.Size(180, 22);
+            this.DetectTypeFMS.Text = "Detect Type";
+            this.DetectTypeFMS.ToolTipText = "Finds file type";
+            this.DetectTypeFMS.Click += new System.EventHandler(this.DetectTypeFMS_Click);
+            // 
+            // OptionsMS
+            // 
+            this.OptionsMS.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.OptionsMS.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.OptionsMS.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.OptionsMS.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.DetectionModeOMS});
+            this.OptionsMS.ForeColor = System.Drawing.SystemColors.Control;
+            this.OptionsMS.Name = "OptionsMS";
+            this.OptionsMS.Size = new System.Drawing.Size(61, 20);
+            this.OptionsMS.Text = "Options";
+            // 
+            // DetectionModeOMS
+            // 
+            this.DetectionModeOMS.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(75)))), ((int)(((byte)(75)))));
+            this.DetectionModeOMS.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.DetectionModeOMS.CheckOnClick = true;
+            this.DetectionModeOMS.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.DetectionModeOMS.ForeColor = System.Drawing.SystemColors.Control;
+            this.DetectionModeOMS.Name = "DetectionModeOMS";
+            this.DetectionModeOMS.Size = new System.Drawing.Size(180, 22);
+            this.DetectionModeOMS.Text = "Detection Mode";
+            this.DetectionModeOMS.ToolTipText = "Makes drag and drop detect files instead of extract or repack them";
             // 
             // HelpMS
             // 
@@ -95,7 +138,7 @@
             this.AboutHMS.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.AboutHMS.ForeColor = System.Drawing.SystemColors.Control;
             this.AboutHMS.Name = "AboutHMS";
-            this.AboutHMS.Size = new System.Drawing.Size(107, 22);
+            this.AboutHMS.Size = new System.Drawing.Size(180, 22);
             this.AboutHMS.Text = "About";
             this.AboutHMS.ToolTipText = "TODO: About this program";
             this.AboutHMS.Click += new System.EventHandler(this.AboutHMS_Click);
@@ -115,6 +158,18 @@
             this.MainFormStatus.Name = "MainFormStatus";
             this.MainFormStatus.Size = new System.Drawing.Size(0, 17);
             // 
+            // MSBTestFMS
+            // 
+            this.MSBTestFMS.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(75)))), ((int)(((byte)(75)))));
+            this.MSBTestFMS.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.MSBTestFMS.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.MSBTestFMS.ForeColor = System.Drawing.SystemColors.Control;
+            this.MSBTestFMS.Name = "MSBTestFMS";
+            this.MSBTestFMS.Size = new System.Drawing.Size(180, 22);
+            this.MSBTestFMS.Text = "MSB Test";
+            this.MSBTestFMS.ToolTipText = "DEBUG: For testing reading ACFA MSB Files";
+            this.MSBTestFMS.Click += new System.EventHandler(this.MSBTestFMS_Click);
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -129,7 +184,6 @@
             this.MainMenuStrip = this.MainFormMenuStrip;
             this.Name = "MainForm";
             this.Text = "SoulsFormats Extractor";
-            this.Load += new System.EventHandler(this.MainForm_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
             this.MainFormMenuStrip.ResumeLayout(false);
@@ -148,7 +202,11 @@
         private System.Windows.Forms.ToolStripMenuItem AboutHMS;
         private System.Windows.Forms.StatusStrip MainFormStatusStrip;
         private System.Windows.Forms.ToolStripStatusLabel MainFormStatus;
-        private System.Windows.Forms.ToolStripMenuItem ExtractFileMS;
+        private System.Windows.Forms.ToolStripMenuItem ExtractFileFMS;
+        private System.Windows.Forms.ToolStripMenuItem DetectTypeFMS;
+        private System.Windows.Forms.ToolStripMenuItem OptionsMS;
+        private System.Windows.Forms.ToolStripMenuItem DetectionModeOMS;
+        private System.Windows.Forms.ToolStripMenuItem MSBTestFMS;
     }
 }
 

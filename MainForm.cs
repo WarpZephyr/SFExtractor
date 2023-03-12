@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using SoulsFormats;
+using SoulsFormats.AC4;
 
 namespace SFExtractor
 {
@@ -26,67 +28,129 @@ namespace SFExtractor
             Logger.CreateLog();
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            
-        }
-
-        // Decompresses multiple file types
+        // Multiselect button supporting 
         private void ExtractFileMS_Click(object sender, EventArgs e)
         {
-            string path = Util.GetFilePath("compressed SoulsFormats file to extract",
-                "BND0/3/4 file (*.bnd)|*.bnd|" +
-                "BND0/3/4 file (*.bin)|*.bin|" +
-                "BXF3/4 file (*.bhd)|*.bhd|" +
+            string[] paths = Util.GetFilePaths("compressed SoulsFormats file to extract",
+                "BND3 file (*.bnd)|*.bnd|" +
+                "BND3 file (*.bin)|*.bin|" +
+                "BND4 file (*.bnd)|*.bnd|" +
+                "BND4 file (*.bin)|*.bin|" +
+                "DCX file (*.dcx)|*.dcx|" +
+                "BXF3 file (*.bhd)|*.bhd|" +
+                "BXF4 file (*.bhd)|*.bhd|" +
                 "BHD5 file (*.bhd)|*.bhd|" +
                 "BHD5 file (*.bhd5)|*.bhd5|" +
                 "Zero3 file (*.000)|*.000|" +
                 "All files (*.*)|*.*"
             );
 
-            if (path == null) return;
-            Extractor.Extract(path);
-            MainFormStatus.Text = $"Extraction completed, check {Path.GetFileName(Util.log)}";
+            if (paths == null) return;
+            IterateFilesExtract(paths);
         }
 
-        // When someone attempts to drag a file into the window
-        private void MainForm_DragEnter(object sender, DragEventArgs e)
+        // Help the user discover file type by using SoulsFile.Is() methods
+        private void DetectTypeFMS_Click(object sender, EventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
-        }
-
-        // Check the dropped item
-        private void MainForm_DragDrop(object sender, DragEventArgs e)
-        {
-            string[] paths = (string[])e.Data.GetData(DataFormats.FileDrop);
-            MainFormStatus.Text = "Extracting....";
-            foreach (string path in paths)
-            {
-                if (Directory.Exists(path))
-                {
-                    MainFormStatus.Text = "Cannot recurse through folders yet or repack, skipping";
-                    Logger.LogWithDate("Cannot recurse through folders yet or repack, skipping");
-                    continue;
-                }
-
-                if (BHD5.IsBDT(path) || BXF3.IsBDT(path) || BXF4.IsBDT(path))
-                {
-                    MainFormStatus.Text = $"Cannot read BDT file {Path.GetFileName(path)} directly, provide BHD5/BXF3/BXF4 first, skipping";
-                    Logger.LogWithDate($"Cannot read BDT file {Path.GetFileName(path)} directly, provide BHD5/BXF3/BXF4 first, skipping");
-                    continue;
-                }
-
-                MainFormStatus.Text = $"Extracting {Path.GetFileName(path)}";
-                Extractor.Extract(path);
-            }
-            MainFormStatus.Text = $"Extraction for all files dropped finished, check {Util.log} for results and errors";
-            Logger.LogWithDate("Extraction for all files dropped finished");
+            string[] paths = Util.GetFilePaths("Select files you wish to detect the type of");
+            if (paths == null) return;
+            IterateFilesDetect(paths);
         }
 
         // TODO: Show About form message
         private void AboutHMS_Click(object sender, EventArgs e)
         {
 
+        }
+
+        // When someone attempts to drag a file into the window get the data from the dragged in files
+        private void MainForm_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
+        }
+
+        // Check drag and dropped files
+        private void MainForm_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] paths = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (DetectionModeOMS.Checked) IterateFilesDetect(paths);
+            else IterateFilesExtract(paths);
+        }
+
+        // Iterate files for detection
+        // This happens in the detect type button and in drag and drop so I made a method here for it
+        private void IterateFilesDetect(string[] paths)
+        {
+            string results = "";
+            foreach (string path in paths)
+            {
+                // Get all the files in directories and add them to the paths to check
+                if (Directory.Exists(path))
+                {
+                    string[] dirPaths = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
+                    IterateFilesDetect(dirPaths);
+                }
+
+                string filetype = Detector.Detect(path);
+                if (filetype == "DCX")
+                {
+                    string compressedFileType = Detector.DetectDCX(path);
+                    results += $"\n{Path.GetFileName(path)} is {compressedFileType} compressed with DCX";
+                    continue;
+                }
+
+                results += $"\n {Path.GetFileName(path)} is {filetype}";
+            }
+
+            MessageBox.Show(results);
+        }
+
+        // Iterate files for extraction
+        // This happens in the extract button and in drag and drop so I made a method here for it
+        private void IterateFilesExtract(string[] paths)
+        {
+            foreach (string path in paths)
+            {
+                // Get all the files in directories and add them to the paths to check
+                if (Directory.Exists(path))
+                {
+                    string[] dirPaths = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
+                    paths.Concat(dirPaths);
+                    continue;
+                }
+
+                // Check for file types that need more than one file or continue checking through file types that need only one file
+                if (BXF3.IsBHD(path))
+                {
+                    string filefilter = "BDT file (*.bdt)|*.bdt|BDT file (*.bin)|*.bin|All files (*.*)|*.*";
+                    string bdtPath = Util.GetFilePath($"Select matching BDT file to open with {Path.GetFileName(path)}", filefilter);
+                    Extractor.ExtractBXF3(path, bdtPath);
+                }
+                else if (BXF4.IsBHD(path))
+                {
+                    string filefilter = "BDT file (*.bdt)|*.bdt|BDT file (*.bin)|*.bin|All files (*.*)|*.*";
+                    string bdtPath = Util.GetFilePath($"Select matching BDT file to open with {Path.GetFileName(path)}", filefilter);
+                    Extractor.ExtractBXF3(path, bdtPath);
+                }
+                else if (BHD5.IsBHD(path))
+                {
+                    string filefilter = "BDT file (*.bdt)|*.bdt|BDT file (*.bin)|*.bin|All files (*.*)|*.*";
+                    string bdtPath = Util.GetFilePath($"Select matching BDT file to open with {Path.GetFileName(path)}", filefilter);
+                    Extractor.ExtractBXF3(path, bdtPath);
+                }
+                else
+                {
+                    Detector.DetectExtract(path);
+                }
+            }
+        }
+
+        // TODO: Remove this later.
+        // Only for trying to get MSB files to work for ACFA
+        private void MSBTestFMS_Click(object sender, EventArgs e)
+        {
+            string path = Util.GetFilePath("Select your MSB file to test reading");
+            MSBD msb = MSBD.Read(path);
         }
     }
 }

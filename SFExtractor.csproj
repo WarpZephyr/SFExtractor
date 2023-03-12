@@ -64,6 +64,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converter.cs" />
+    <Compile Include="Detector.cs" />
     <Compile Include="Extractor.cs" />
     <Compile Include="IsExternalInit.cs" />
     <Compile Include="Logger.cs" />
