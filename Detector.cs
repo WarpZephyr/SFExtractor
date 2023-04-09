@@ -1,7 +1,6 @@
 ﻿using SoulsFormats;
 using SoulsFormats.AC4;
 using SoulsFormats.ACE3;
-using SoulsFormats.Other;
 
 namespace SFExtractor
 {

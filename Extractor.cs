@@ -142,14 +142,18 @@ namespace SFExtractor
         /// <param name="path">A string containing the path to a BND0 file</param>
         public static void ExtractBND0(string path)
         {
-            try { ExtractBND0ACE3(path); }
+            try { ExtractBND0_ACE3(path); }
             catch
             {
-                try { ExtractBND0Kuon(path); }
+                try { ExtractBND0_Kuon(path); }
                 catch
                 {
-                    try { ExtractDVDBND0Kuon(path); }
-                    catch {}
+                    try { ExtractDVDBND0_Kuon(path); }
+                    catch 
+                    {
+                        try { ExtractBND0_ACNB(path); }
+                        catch{ throw; }
+                    }
                 }
             }
         }
@@ -158,7 +162,7 @@ namespace SFExtractor
         /// Extract a ACE3 BND0 file from a given path
         /// </summary>
         /// <param name="path">A string containing the path to a ACE3 BN0 file</param>
-        public static void ExtractBND0ACE3(string path)
+        public static void ExtractBND0_ACE3(string path)
         {
             var bnd0 = SoulsFormats.ACE3.BND0.Read(path);
             string sourceDir = Path.GetDirectoryName(path);
@@ -176,7 +180,7 @@ namespace SFExtractor
         /// Extract a Kuon BND0 file from a given path
         /// </summary>
         /// <param name="path">A string containing the path to a Kuon BND4 file</param>
-        public static void ExtractBND0Kuon(string path)
+        public static void ExtractBND0_Kuon(string path)
         {
             var bnd0 = SoulsFormats.Kuon.BND0.Read(path);
             string sourceDir = Path.GetDirectoryName(path);
@@ -191,10 +195,31 @@ namespace SFExtractor
         }
 
         /// <summary>
+        /// Extract a AC3 BND0 file from a given path
+        /// </summary>
+        /// <param name="path">A string containing the path to a AC3 BND4 file</param>
+        public static void ExtractBND0_ACNB(string path)
+        {
+            var bnd0 = SoulsFormats.AC3.BND0.Read(path);
+            string sourceDir = Path.GetDirectoryName(path);
+            string filename = Path.GetFileName(path);
+            string targetDir = $"{sourceDir}\\{filename.Replace('.', '-')}";
+            foreach (var file in bnd0.Files)
+            {
+                string name = file.Name;
+                name ??= $"{file.ID}";
+                string outPath = $@"{targetDir}-bnd0\{name}";
+                Console.WriteLine(outPath);
+                Directory.CreateDirectory(Path.GetDirectoryName(outPath));
+                File.WriteAllBytes(outPath, file.Bytes);
+            }
+        }
+
+        /// <summary>
         /// Extract a Kuon DVDBND0 file from a given path
         /// </summary>
         /// <param name="path">A string containing the path to a Kuon DVDBND0 file</param>
-        public static void ExtractDVDBND0Kuon(string path)
+        public static void ExtractDVDBND0_Kuon(string path)
         {
             var bnd0 = SoulsFormats.Kuon.DVDBND0.Read(path);
             string sourceDir = Path.GetDirectoryName(path);

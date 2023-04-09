@@ -28,8 +28,7 @@ namespace SFExtractor
             Logger.CreateLog();
         }
 
-        // Multiselect button supporting 
-        private void ExtractFileMS_Click(object sender, EventArgs e)
+        private void UnpackMS_Click(object sender, EventArgs e)
         {
             string[] paths = Util.GetFilePaths("compressed SoulsFormats file to extract",
                 "BND3 file (*.bnd)|*.bnd|" +
@@ -145,12 +144,9 @@ namespace SFExtractor
             }
         }
 
-        // TODO: Remove this later.
-        // Only for trying to get MSB files to work for ACFA
-        private void MSBTestFMS_Click(object sender, EventArgs e)
+        private void RepackFMS_Click(object sender, EventArgs e)
         {
-            string path = Util.GetFilePath("Select your MSB file to test reading");
-            MSBD msb = MSBD.Read(path);
+
         }
     }
 }
